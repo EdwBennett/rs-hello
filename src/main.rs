@@ -1,3 +1,3 @@
 fn main() {
-    println!("Hello, World. From rs_hello!");
+    println!("Hello, World, from rs_hello!");
 }
