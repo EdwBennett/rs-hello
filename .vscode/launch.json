@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug hello-gui",
+      "cargo": { "args": ["build", "-p", "hello-gui", "--bin", "hello-gui"] },
+      "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug hello-cli",
+      "cargo": { "args": ["build", "-p", "hello-cli"] },
+      "args": ["--name", "Ada"],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}
