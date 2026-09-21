@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>hello-gui</title>
     <!-- Trunk compiles this crate to wasm and injects the loader. -->
-    <link data-trunk rel="rust" data-wasm-opt="z" />
+    <!-- data-target-name picks the cdylib (lib.rs, which has start_web) over the native bin. -->
+    <link data-trunk rel="rust" data-target-name="hello_gui" data-wasm-opt="z" />
     <style>
       html, body { margin: 0; height: 100%; }
       canvas { display: block; width: 100%; height: 100%; }
