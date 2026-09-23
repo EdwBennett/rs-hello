@@ -1,4 +1,5 @@
-// script logic that will be used in hello-core library
+// primes script logic that will be modified for use in hello-core lib.rs
+//   then primes.rs will be deleted (after its Rust code is moved to lib.rs)
 // fn random_consecutive_primes() -> (u64, u64)
 //   for the purposes of this template project prime calculation inefficiency is a plus
 //   fn will be called by each hello-cli and by zola code
