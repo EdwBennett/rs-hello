@@ -1,7 +1,8 @@
 // script logic that will be used in hello-core library
 // fn random_consecutive_primes() -> (u64, u64)
-//   will be called by both hello-cli and by zola code
-//   which will display something like "today's consecutive primes are x and y"
+//   for the purposes of this template project prime calculation inefficiency is a plus
+//   fn will be called by each hello-cli and by zola code
+//   each will display something like "today's consecutive primes are x and y"
 
 use rand::Rng;
 
