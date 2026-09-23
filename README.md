@@ -1,45 +1,46 @@
 # rs_hello
 
-A template for a Rust project whose main product is an [egui](https://github.com/emilk/egui)
-app that runs natively **and** in the browser (WebAssembly, hosted on GitHub Pages).
+A template for a Rust workspace with a shared library, a CLI, and a
+[Zola](https://www.getzola.org/) static site deployed to GitHub Pages.
 
 ## Layout
 
 | Path | What it is |
 | --- | --- |
-| `crates/hello-core` | Shared logic (`greet`). Must stay wasm-safe: no filesystem, threads or `Instant`. |
-| `crates/hello-gui` | egui app. `lib.rs`/`app.rs` hold the UI; `main.rs` is the native entry, `start_web` (in `lib.rs`) the browser entry. |
+| `crates/hello-core` | Shared logic (`greet`). |
 | `crates/hello-cli` | Command-line consumer of `hello-core`. |
-| `.github/workflows` | `ci.yml` (fmt, clippy, tests, wasm check) and `pages.yml` (deploys the web app). |
+| `site/` | Zola static site — not a Rust crate, no `Cargo.toml` — deployed to GitHub Pages. |
+| `.github/workflows` | `ci.yml` (fmt, clippy, tests, site build check) and `pages.yml` (deploys the site). |
 
 ## Run
 
 ```sh
-cargo run -p hello-gui          # native window
 cargo run -p hello-cli -- --name Ada
 cargo test --workspace
 ```
 
-Web (needs [Trunk](https://trunkrs.dev): `cargo install trunk`):
+Site (needs [Zola](https://www.getzola.org/documentation/getting-started/installation/) installed
+locally):
 
 ```sh
-trunk serve --config crates/hello-gui/Trunk.toml
+cd site
+zola serve
 ```
-
-On Linux the native GUI needs the usual windowing/GL libraries (Wayland or X11, plus OpenGL).
 
 ## Deploying to GitHub Pages
 
 1. In the repo settings, go to **Pages** and set **Source** to **GitHub Actions**.
-2. Push to `main`/`master`. `pages.yml` builds with the right `/<repo-name>/` prefix automatically.
+2. Push to `main`/`master`. `pages.yml` builds `site/` with Zola and deploys it.
 
 ## Using this template
 
 1. Click **Use this template** on GitHub (enable *Template repository* in the repo settings first).
 2. Rename: replace `hello` in crate names and directories, and update `repository` in the root
-   `Cargo.toml` and `REPO_URL` in `crates/hello-gui/src/app.rs`.
+   `Cargo.toml`.
+3. Update `site/config.toml`: `base_url` (must match `https://<user-or-org>.github.io/<repo>`),
+   `title`, `description`.
 
 ## Versions
 
-egui/eframe are pre-1.0 and change APIs between minor releases. They are pinned to a minor
-version in the root `Cargo.toml`, and `Cargo.lock` is committed. Upgrade deliberately.
+The Zola version used in CI and in the Pages deploy is pinned in both `.github/workflows/ci.yml`
+and `.github/workflows/pages.yml` (`ZOLA_VERSION`) — keep the two in sync when bumping it.

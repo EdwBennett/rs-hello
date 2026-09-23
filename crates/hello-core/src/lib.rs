@@ -1,7 +1,4 @@
-//! Shared logic used by the CLI and the GUI.
-//!
-//! This crate must stay WebAssembly-safe: no filesystem, threads, or
-//! `std::time::Instant`. CI builds it for `wasm32-unknown-unknown`.
+//! Shared logic used by `hello-cli`.
 
 /// Build a greeting for `name`, falling back to "World" when blank.
 ///
