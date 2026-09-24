@@ -34,7 +34,7 @@
     </main>
 
     <script type="module">
-      import init, { todaysPrimesMessage } from "/wasm/hello_core.js";
+      import init, { todaysPrimesMessage } from "{{ get_url(path='wasm/hello_core.js') }}";
 
       async function run() {
         await init();
