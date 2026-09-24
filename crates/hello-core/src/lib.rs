@@ -1,4 +1,20 @@
-//! Shared logic used by `hello-cli`.
+//! Shared logic used by `hello-cli` and, via WASM, the Zola site.
+
+mod primes;
+
+pub use primes::todays_primes_message;
+
+/// WASM bindings, compiled only when targeting the browser.
+#[cfg(target_arch = "wasm32")]
+mod wasm {
+    use wasm_bindgen::prelude::wasm_bindgen;
+
+    /// Browser-callable wrapper around [`crate::todays_primes_message`].
+    #[wasm_bindgen(js_name = todaysPrimesMessage)]
+    pub fn todays_primes_message() -> String {
+        crate::todays_primes_message()
+    }
+}
 
 /// Build a greeting for `name`, falling back to "World" when blank.
 ///

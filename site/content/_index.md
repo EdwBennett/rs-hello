@@ -1,6 +1,6 @@
 +++
-title = "Hello, world!"
+title = "Loading today's primes…"
 +++
 
-Welcome to this [Zola](https://www.getzola.org/) site, built and deployed to GitHub Pages by
-the accompanying GitHub Actions workflow.
+This sentence is computed in your browser by Rust compiled to WebAssembly, then deployed to
+GitHub Pages via the accompanying GitHub Actions workflow.

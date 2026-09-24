@@ -1,8 +1,6 @@
-// fn random_consecutive_primes() -> (u64, u64)
-//   fn will be called by hello-cli and by zola code
-//   each will display "Today's consecutive primes are x and y"
+//! Random consecutive-prime lookup, shared by `hello-cli` and the Zola site (via WASM).
 
-use rand::Rng;
+use rand::RngExt;
 
 /// Returns true when `number` is prime.
 fn is_prime(number: u64) -> bool {
@@ -57,8 +55,8 @@ fn nth_prime(n: u32) -> u64 {
 /// Generates a random n in the range 1..=1000, then returns:
 /// `(the nth prime, the (n + 1)th prime)`.
 fn random_consecutive_primes() -> (u64, u64) {
-    let mut rng = rand::thread_rng();
-    let n: u32 = rng.gen_range(1..=1000);
+    let mut rng = rand::rng();
+    let n: u32 = rng.random_range(1..=1000);
 
     let nth = nth_prime(n);
     let next = nth_prime(n + 1);
@@ -66,10 +64,28 @@ fn random_consecutive_primes() -> (u64, u64) {
     (nth, next)
 }
 
-fn main() {
-    let (nth_prime_value, next_prime_value) = random_consecutive_primes();
+/// Builds a display-ready sentence naming a random pair of consecutive primes.
+///
+/// A fresh random pair is chosen on every call.
+pub fn todays_primes_message() -> String {
+    let (nth, next) = random_consecutive_primes();
+    format!("Today's prime numbers are {nth} and {next}")
+}
 
-    println!("The randomly selected n produced these consecutive indexed primes:");
-    println!("nth prime: {}", nth_prime_value);
-    println!("(n + 1)th prime: {}", next_prime_value);
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn nth_prime_matches_known_values() {
+        assert_eq!(nth_prime(1), 2);
+        assert_eq!(nth_prime(2), 3);
+        assert_eq!(nth_prime(3), 5);
+    }
+
+    #[test]
+    fn message_names_two_consecutive_primes() {
+        let message = todays_primes_message();
+        assert!(message.starts_with("Today's prime numbers are "));
+    }
 }

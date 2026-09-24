@@ -23,6 +23,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - name: Install wasm-pack
+        uses: jetli/wasm-pack-action@0d096b08b4e5a7de8c28de67e11e945404e9eefa # v0.4.0
+        with:
+          version: latest
+      - name: Build hello-core for the browser
+        working-directory: crates/hello-core
+        run: wasm-pack build --target web --out-dir ../../site/static/wasm
       - name: Build Zola site and upload Pages artifact
         uses: getzola/github-pages@066755243e69f508fd1a74739fbf1a65f656c790
         with:

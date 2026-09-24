@@ -29,8 +29,19 @@
 
   <body>
     <main>
-      <h1>{{ section.title }}</h1>
+      <h1 id="primes">{{ section.title }}</h1>
       {{ section.content | safe }}
     </main>
+
+    <script type="module">
+      import init, { todaysPrimesMessage } from "/wasm/hello_core.js";
+
+      async function run() {
+        await init();
+        document.getElementById("primes").textContent = todaysPrimesMessage();
+      }
+
+      run();
+    </script>
   </body>
 </html>

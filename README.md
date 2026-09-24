@@ -7,25 +7,31 @@ A template for a Rust workspace with a shared library, a CLI, and a
 
 | Path | What it is |
 | --- | --- |
-| `crates/hello-core` | Shared logic (`greet`). |
+| `crates/hello-core` | Shared logic (`todays_primes_message`), compiled both natively (`rlib`, for `hello-cli`) and to WebAssembly (`cdylib`, for the Zola site). |
 | `crates/hello-cli` | Command-line consumer of `hello-core`. |
-| `site/` | Zola static site — not a Rust crate, no `Cargo.toml` — deployed to GitHub Pages. |
-| `.github/workflows` | `ci.yml` (fmt, clippy, tests, site build check) and `pages.yml` (deploys the site). |
+| `site/` | Zola static site — not a Rust crate, no `Cargo.toml` — deployed to GitHub Pages. Loads `hello-core` as WASM to render today's primes in the browser. |
+| `.github/workflows` | `ci.yml` (fmt, clippy, tests, WASM + site build check) and `pages.yml` (builds the WASM bundle, then deploys the site). |
 
 ## Run
 
 ```sh
-cargo run -p hello-cli -- --name Ada
+cargo run -p hello-cli
 cargo test --workspace
 ```
 
-Site (needs [Zola](https://www.getzola.org/documentation/getting-started/installation/) installed
-locally):
+Site (needs [Zola](https://www.getzola.org/documentation/getting-started/installation/) and
+[`wasm-pack`](https://rustwasm.github.io/wasm-pack/installer/) installed locally, plus the
+`wasm32-unknown-unknown` target: `rustup target add wasm32-unknown-unknown`):
 
 ```sh
-cd site
+cd crates/hello-core
+wasm-pack build --target web --out-dir ../../site/static/wasm
+cd ../../site
 zola serve
 ```
+
+`site/static/wasm/` is generated (gitignored) — rebuild it with the `wasm-pack` command above
+whenever `hello-core` changes.
 
 ## Deploying to GitHub Pages
 
