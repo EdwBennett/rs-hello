@@ -12,14 +12,14 @@ fn is_prime(number: u64) -> bool {
         return true;
     }
 
-    if number % 2 == 0 {
+    if number.is_multiple_of(2) {
         return false;
     }
 
     let limit = (number as f64).sqrt() as u64;
 
     for divisor in (3..=limit).step_by(2) {
-        if number % divisor == 0 {
+        if number.is_multiple_of(divisor) {
             return false;
         }
     }
