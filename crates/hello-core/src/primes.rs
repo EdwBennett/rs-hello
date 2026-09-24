@@ -1,9 +1,6 @@
-// primes script logic that will be modified for use in hello-core lib.rs
-//   then primes.rs will be deleted (after its Rust code is moved to lib.rs)
 // fn random_consecutive_primes() -> (u64, u64)
-//   for the purposes of this template project prime calculation inefficiency is a plus
-//   fn will be called by each hello-cli and by zola code
-//   each will display something like "today's consecutive primes are x and y"
+//   fn will be called by hello-cli and by zola code
+//   each will display "Today's consecutive primes are x and y"
 
 use rand::Rng;
 
