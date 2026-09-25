@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Personal local-dev tool: rebuilds hello-core to WASM, rebuilds the Zola
+# site into a permanent local web-root, and restarts the systemd service
+# serving it — so a running copy never ends up pointed at a directory
+# `zola build` just deleted. See ../docs/Run local-only Zola
+# html_css_javascript_wasm webpage.md for the full setup this assumes
+# (systemd user service, port, etc.) — adjust LOCAL_SITE_DIR/LOCAL_BASE_URL
+# and the systemd unit name below if you set those up differently.
+#
+# Intended to be run via a symlink from ~/.local/bin (or similar), so it's
+# recoverable by cloning this repo again and re-linking — see the doc above.
+set -euo pipefail
+
+# cargo-installed tools (wasm-bindgen) live here; not guaranteed to be on
+# PATH for every invocation context (e.g. run outside an interactive shell).
+export PATH="$HOME/.cargo/bin:$PATH"
+
+# Self-locate the repo root from this script's own (resolved) path, so this
+# works regardless of where the repo is cloned or which machine it's run on.
+SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
+REPO_DIR="$(cd "$(dirname "$SCRIPT_PATH")/.." && pwd)"
+LOCAL_SITE_DIR="$HOME/.local/share/my-zola-site"
+LOCAL_BASE_URL="http://127.0.0.1:8080"
+
+echo "==> Building hello-core for wasm32-unknown-unknown"
+cargo build --release -p hello-core --target wasm32-unknown-unknown \
+  --manifest-path "$REPO_DIR/Cargo.toml"
+
+echo "==> Generating JS glue with wasm-bindgen"
+rm -rf "$REPO_DIR/site/static/wasm"
+mkdir -p "$REPO_DIR/site/static/wasm"
+wasm-bindgen --target web --out-dir "$REPO_DIR/site/static/wasm" \
+  "$REPO_DIR/target/wasm32-unknown-unknown/release/hello_core.wasm"
+
+echo "==> Building the Zola site into $LOCAL_SITE_DIR"
+zola --root "$REPO_DIR/site" build \
+  --base-url "$LOCAL_BASE_URL" \
+  --output-dir "$LOCAL_SITE_DIR" \
+  --force
+
+echo "==> Restarting my-zola-site.service"
+systemctl --user restart my-zola-site.service
+
+echo "==> Done. Serving at $LOCAL_BASE_URL"
+systemctl --user is-active my-zola-site.service

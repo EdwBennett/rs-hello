@@ -54,7 +54,10 @@ fn nth_prime(n: u32) -> u64 {
 
 /// Generates a random n in the range 1..=1000, then returns:
 /// `(the nth prime, the (n + 1)th prime)`.
-fn random_consecutive_primes() -> (u64, u64) {
+///
+/// A fresh random pair is chosen on every call. Returns bare numbers rather than a
+/// display-ready message — callers (the CLI, or JS via WASM) own how they're presented.
+pub fn random_consecutive_primes() -> (u64, u64) {
     let mut rng = rand::rng();
     let n: u32 = rng.random_range(1..=1000);
 
@@ -62,14 +65,6 @@ fn random_consecutive_primes() -> (u64, u64) {
     let next = nth_prime(n + 1);
 
     (nth, next)
-}
-
-/// Builds a display-ready sentence naming a random pair of consecutive primes.
-///
-/// A fresh random pair is chosen on every call.
-pub fn todays_primes_message() -> String {
-    let (nth, next) = random_consecutive_primes();
-    format!("Today's prime numbers are {nth} and {next}")
 }
 
 #[cfg(test)]
@@ -84,8 +79,10 @@ mod tests {
     }
 
     #[test]
-    fn message_names_two_consecutive_primes() {
-        let message = todays_primes_message();
-        assert!(message.starts_with("Today's prime numbers are "));
+    fn returns_two_consecutive_primes() {
+        let (first, second) = random_consecutive_primes();
+        assert!(is_prime(first));
+        assert!(is_prime(second));
+        assert!(second > first);
     }
 }

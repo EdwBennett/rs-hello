@@ -129,6 +129,42 @@ Now use this local address in Firefox, Chromium, or another browser:
 
 http://127.0.0.1:8080
 
+### **Updating the site after a source change**
+
+`zola build` doesn't update files in place — its documented behavior is to delete the whole
+output directory and recreate it fresh on every run. If the systemd service is already running
+when you rebuild, its process keeps its *original* handle to that directory: the path still
+resolves and serving still works, but `/proc/<pid>/cwd` will show `(deleted)`, meaning the
+running process is holding an orphaned filesystem reference instead of a clean one pointing at
+the directory that now actually exists at that path. Restarting the service after every rebuild
+avoids that.
+
+Rather than remembering three separate commands (rebuild the WASM bundle, rebuild the site,
+restart the service) in the right order every time the Rust/WASM source changes, they're combined
+into one script tracked in this repo: [`tools/rebuild-my-zola-site`](../tools/rebuild-my-zola-site).
+It's kept in the repo (rather than only in `~/.local/bin`, where `zola` itself still lives) on
+purpose: `~/.local/bin` isn't backed up by cloning this repo, but the repo is — so if this machine
+is lost, rebuilt, or replaced, `git clone` alone recovers the script, not just its documentation.
+
+It's a personal local-dev tool, not project tooling — it hardcodes a port and a systemd unit name
+that are this machine's choices, not the template's. It self-locates the repo root from its own
+path, though, so it isn't tied to `$HOME/src/rs_hello` specifically; it works from wherever the
+repo happens to be cloned. `wasm-bindgen` is called directly (rather than `wasm-pack build`)
+because that's the toolchain actually installed locally; either works, as long as the `--out-dir`
+matches what `index.html`'s `get_url(path='wasm/...')` call expects.
+
+Run it via a symlink from somewhere on `PATH`, e.g.:
+
+```sh
+ln -s "$(pwd)/tools/rebuild-my-zola-site" "$HOME/.local/bin/rebuild-my-zola-site"
+```
+
+Whenever `crates/hello-core` or `site/` changes and you want the local copy to reflect it, run
+`rebuild-my-zola-site`. **On a new machine**, after re-doing the `zola`/`wasm-bindgen`/systemd/KDE
+setup above from this doc, the one step that's easy to forget is re-creating this symlink — the
+script itself comes back automatically with `git clone`, but the `~/.local/bin` entry pointing at
+it does not.
+
 To stop it later:
 
 ```sh

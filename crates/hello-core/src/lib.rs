@@ -2,17 +2,21 @@
 
 mod primes;
 
-pub use primes::todays_primes_message;
+pub use primes::random_consecutive_primes;
 
 /// WASM bindings, compiled only when targeting the browser.
 #[cfg(target_arch = "wasm32")]
 mod wasm {
     use wasm_bindgen::prelude::wasm_bindgen;
 
-    /// Browser-callable wrapper around [`crate::todays_primes_message`].
-    #[wasm_bindgen(js_name = todaysPrimesMessage)]
-    pub fn todays_primes_message() -> String {
-        crate::todays_primes_message()
+    /// Browser-callable wrapper around [`crate::random_consecutive_primes`].
+    ///
+    /// Returns bare numbers (`[first, second]`), not a display-ready sentence — the
+    /// page's own JS builds whatever text it wants around them.
+    #[wasm_bindgen(js_name = randomConsecutivePrimes)]
+    pub fn random_consecutive_primes() -> Vec<u64> {
+        let (first, second) = crate::random_consecutive_primes();
+        vec![first, second]
     }
 }
 

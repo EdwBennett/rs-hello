@@ -7,10 +7,11 @@ A template for a Rust workspace with a shared library, a CLI, and a
 
 | Path | What it is |
 | --- | --- |
-| `crates/hello-core` | Shared logic (`todays_primes_message`), compiled both natively (`rlib`, for `hello-cli`) and to WebAssembly (`cdylib`, for the Zola site). |
+| `crates/hello-core` | Shared logic (`random_consecutive_primes`, bare numbers only), compiled both natively (`rlib`, for `hello-cli`) and to WebAssembly (`cdylib`, for the Zola site). Presentation (sentence text, DOM updates) lives in each consumer, not here. |
 | `crates/hello-cli` | Command-line consumer of `hello-core`. |
-| `site/` | Zola static site — not a Rust crate, no `Cargo.toml` — deployed to GitHub Pages. Loads `hello-core` as WASM to render today's primes in the browser. |
+| `site/` | Zola static site — not a Rust crate, no `Cargo.toml` — deployed to GitHub Pages. Loads `hello-core` as WASM and builds the displayed sentence in its own inline JS. |
 | `.github/workflows` | `ci.yml` (fmt, clippy, tests, WASM + site build check) and `pages.yml` (builds the WASM bundle, then deploys the site). |
+| `tools/` | Personal local-dev scripts, not part of the published site or CI — see `docs/Run local-only Zola html_css_javascript_wasm webpage.md`. |
 
 ## Run
 

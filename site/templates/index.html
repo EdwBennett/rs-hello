@@ -34,11 +34,13 @@
     </main>
 
     <script type="module">
-      import init, { todaysPrimesMessage } from "{{ get_url(path='wasm/hello_core.js') }}";
+      import init, { randomConsecutivePrimes } from "{{ get_url(path='wasm/hello_core.js') }}";
 
       async function run() {
         await init();
-        document.getElementById("primes").textContent = todaysPrimesMessage();
+        const [first, second] = randomConsecutivePrimes();
+        document.getElementById("primes").textContent =
+          `Today's prime numbers are ${first} and ${second}`;
       }
 
       run();
