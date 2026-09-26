@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/rust-check.sh",
+            "timeout": 300,
+            "statusMessage": "Running cargo fmt/clippy/test..."
+          }
+        ]
+      }
+    ]
+  }
+}
