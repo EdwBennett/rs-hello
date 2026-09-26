@@ -9,6 +9,12 @@
             "command": "bash .claude/hooks/rust-check.sh",
             "timeout": 300,
             "statusMessage": "Running cargo fmt/clippy/test..."
+          },
+          {
+            "type": "command",
+            "command": "bash .claude/hooks/rebuild-zola-site.sh",
+            "timeout": 300,
+            "statusMessage": "Rebuilding local Zola site..."
           }
         ]
       }

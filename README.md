@@ -3,6 +3,13 @@
 A template for a Rust workspace with a shared library, a CLI, and a
 [Zola](https://www.getzola.org/) static site deployed to GitHub Pages.
 
+> **If you cloned this repo:** It carries personal,
+> machine-specific automation: `tools/rebuild-my-zola-site` (see
+> `docs/Run local-only Zola html_css_javascript_wasm webpage.md`) assumes a systemd user
+> service and local tooling paths, `.claude/settings.json`
+> runs that script automatically (via Claude Code hooks) whenever `site/` or
+> `crates/hello-core/` changes.
+
 ## Layout
 
 | Path | What it is |
@@ -11,7 +18,7 @@ A template for a Rust workspace with a shared library, a CLI, and a
 | `crates/hello-cli` | Command-line consumer of `hello-core`. |
 | `site/` | Zola static site — not a Rust crate, no `Cargo.toml` — deployed to GitHub Pages. Loads `hello-core` as WASM and builds the displayed sentence in its own inline JS. |
 | `.github/workflows` | `ci.yml` (fmt, clippy, tests, WASM + site build check) and `pages.yml` (builds the WASM bundle, then deploys the site). |
-| `tools/` | Personal local-dev scripts, not part of the published site or CI — see `docs/Run local-only Zola html_css_javascript_wasm webpage.md`. |
+| `tools/` | Personal local-dev scripts, not part of the published site or CI — see `docs/Run local-only Zola html_css_javascript_wasm webpage.md`. `rebuild-my-zola-site` is also run automatically by a Claude Code hook (`.claude/settings.json` / `.claude/hooks/`) on `site/` or `hello-core` changes. |
 
 ## Run
 
