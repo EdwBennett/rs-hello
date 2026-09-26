@@ -6,7 +6,8 @@ A template for a Rust workspace with a shared library, a CLI, and a
 > **If you cloned this repo:** It carries personal,
 > machine-specific automation: `tools/rebuild-my-zola-site` (see
 > `docs/Run local-only Zola html_css_javascript_wasm webpage.md`) assumes a systemd user
-> service and local tooling paths, `.claude/settings.json`
+> service serving the built site at `http://127.0.0.1:8080` and local tooling paths,
+> `.claude/settings.json`
 > runs that script automatically (via Claude Code hooks) whenever `site/` or
 > `crates/hello-core/` changes.
 
