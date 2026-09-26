@@ -3,7 +3,7 @@
 A template for a Rust workspace with a shared library, a CLI, and a
 [Zola](https://www.getzola.org/) static site deployed to GitHub Pages.
 
-> **If you cloned this repo:** It carries personal,
+> **If you cloned this repo:** It carries
 > machine-specific automation: `tools/rebuild-my-zola-site` (see
 > `docs/Run local-only Zola html_css_javascript_wasm webpage.md`) assumes a systemd user
 > service serving the built site at `http://127.0.0.1:8080` and local tooling paths,
