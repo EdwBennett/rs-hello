@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Runs the Playwright end-to-end test(s) for the Zola site (see ../e2e/).
+#
+# Unlike the other scripts in this directory, this one is NOT
+# machine-specific: Playwright builds hello-core to WASM, starts its own
+# throwaway `zola serve`, runs the tests against it, and shuts the server
+# down again. Anyone who's cloned this repo can run it, given Node.js.
+#
+# First time on a machine (needs Node.js + npm already installed):
+#   cd e2e && npm install && npx playwright install --with-deps
+#
+# After that, any of these work:
+#   tools/run-e2e-tests
+#   tools/run-e2e-tests --headed        (watch it run in a real browser window)
+#   (cd e2e && npx playwright test)
+set -euo pipefail
+
+SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
+REPO_DIR="$(cd "$(dirname "$SCRIPT_PATH")/.." && pwd)"
+
+cd "$REPO_DIR/e2e"
+exec npx playwright test "$@"

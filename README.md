@@ -18,7 +18,8 @@ A template for a Rust workspace with a shared library, a CLI, and a
 | `crates/hello-cli` | Command-line consumer of `hello-core`. |
 | `site/` | Zola static site — not a Rust crate, no `Cargo.toml` — deployed to GitHub Pages. Loads `hello-core` as WASM and builds the displayed sentence in its own inline JS. |
 | `.github/workflows` | `ci.yml` (fmt, clippy, tests, WASM + site build check) and `pages.yml` (builds the WASM bundle, then deploys the site). |
-| `tools/` | Personal local-dev scripts, not part of the published site or CI — see `docs/Run local-only Zola html_css_javascript_wasm webpage.md`. `rebuild-my-zola-site` is also run automatically by a Claude Code hook (`.claude/settings.json` / `.claude/hooks/`) on `site/` or `hello-core` changes. |
+| `tools/` | Personal local-dev scripts, not part of the published site or CI — see `docs/Run local-only Zola html_css_javascript_wasm webpage.md`. `rebuild-my-zola-site` is also run automatically by a Claude Code hook (`.claude/settings.json` / `.claude/hooks/`) on `site/` or `hello-core` changes. `run-e2e-tests` is the exception — it's portable, see below. |
+| `e2e/` | Playwright end-to-end test(s) for the site — see "Testing the site end-to-end" below. |
 
 ## Run
 
@@ -40,6 +41,27 @@ zola serve
 
 `site/static/wasm/` is generated (gitignored) — rebuild it with the `wasm-pack` command above
 whenever `hello-core` changes.
+
+## Testing the site end-to-end
+
+[Playwright](https://playwright.dev/) drives a real browser against a throwaway local build of
+the site (own `zola serve`, own port — no personal setup needed, and nothing is left running
+afterwards). First time on a machine (needs [Node.js](https://nodejs.org/) + npm):
+
+```sh
+cd e2e
+npm install
+npx playwright install --with-deps
+```
+
+After that:
+
+```sh
+tools/run-e2e-tests
+```
+
+which is just `cd e2e && npx playwright test` — see that script for options (e.g. `--headed` to
+watch it run in a real browser window).
 
 ## Deploying to GitHub Pages
 
