@@ -11,6 +11,10 @@ set -euo pipefail
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.." # repo root
 
+# rustup/cargo install wasm-pack into ~/.cargo/bin, which isn't always on
+# PATH in non-interactive shells (e.g. when Playwright launches this script).
+export PATH="${CARGO_HOME:-$HOME/.cargo}/bin:$PATH"
+
 echo "==> Building hello-core for wasm32-unknown-unknown"
 (cd crates/hello-core && wasm-pack build --target web --out-dir ../../site/static/wasm)
 
