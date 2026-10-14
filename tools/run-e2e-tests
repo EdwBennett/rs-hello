@@ -12,7 +12,15 @@
 # After that, any of these work:
 #   tools/run-e2e-tests
 #   tools/run-e2e-tests --headed        (watch it run in a real browser window)
+#   tools/run-e2e-tests tests/title.spec.ts --headed --debug
+#                                       (step through one test in the
+#                                       Playwright Inspector; press Resume or
+#                                       Step rather than closing the browser
+#                                       window, which fails the test)
 #   (cd e2e && npx playwright test)
+#
+# Put any test file paths BEFORE --debug: it takes an optional mode
+# (inspector|cli), so `--debug tests/foo.spec.ts` errors out.
 set -euo pipefail
 
 SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
